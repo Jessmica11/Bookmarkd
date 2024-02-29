@@ -1,0 +1,27 @@
+[
+  {
+    "username": "Jessmica11",
+    "email": "jmscheck11@gmail.com",
+    "password": "password01"
+  },
+  {
+    "username": "", // Jose login info
+    "email": "",
+    "password": "password02"
+  },
+  {
+    "username": "", // Chanel login info
+    "email": "",
+    "password": "password03"
+  },
+  {
+    "username": "", // Kassandra login info
+    "email": "",
+    "password": "password04"
+  },
+  {
+    "username": "", // Kurstie login info
+    "email": "",
+    "password": "password05"
+  }
+]
