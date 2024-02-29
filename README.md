@@ -39,7 +39,7 @@ SO THAT I CAN go to the book club page and add comments as I read, and read comm
 ```
 BOOK CLUBS      -       BOOK GENRE(S)
 -----------------------------------
-Bros & Books 💪  - Biography/Audobiography/Inspirational/Other
+Bros & Books 💪  - Inspirational/Self-Development
 A Novel Idea 👓 - Non-Fiction
 Between the Lines 🔪 -Thriller/Horror/Mystery
 Smutty Buddies 🔥 - Romance/Fantasy
