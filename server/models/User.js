@@ -1,20 +1,20 @@
-// build the User model
-const { Schema, model } = require('mongoose');
-const bcrypt = require('bcrypt');
+// Import models from Mongoose
+const { Schema, model } = require("mongoose");
+const bcrypt = require("bcrypt");
 
-// create the User model using the UserSchema
+// Define the schema for User model
 const userSchema = new Schema({
   username: {
     type: String,
     required: true,
-    unique: true,
+    unique: true, // usernames are unique
     trim: true,
   },
   email: {
     type: String,
     required: true,
-    unique: true,
-    match: [/.+@.+\..+/, 'Must match an email address!'],
+    unique: true, // emails are unique
+    match: [/.+@.+\..+/, "Must match an email address!"],
   },
   password: {
     type: String,
@@ -23,20 +23,28 @@ const userSchema = new Schema({
   },
   bio: {
     type: String,
-    required: false,
-    // add a min length here?
+    required: false, //bios are optional
+    minlength: 2,
+    maxlength: 300, //max/minlength limits users bio
+  
   },
+  book_clubs: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "BookClub", // refrences to associated BookClubs
+    },
+  ],
   comments: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'Comment',
+      ref: "Comment", // refrences to associated Comments
     },
   ],
 });
 
 // set up pre-save middleware to create password
-userSchema.pre('save', async function (next) {
-  if (this.isNew || this.isModified('password')) {
+userSchema.pre("save", async function (next) {
+  if (this.isNew || this.isModified("password")) {
     const saltRounds = 10;
     this.password = await bcrypt.hash(this.password, saltRounds);
   }
@@ -50,6 +58,6 @@ userSchema.methods.isCorrectPassword = async function (password) {
 };
 
 // create the User model using the UserSchema
-const User = model('User', userSchema);
+const User = model("User", userSchema);
 
 module.exports = User;
