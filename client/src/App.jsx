@@ -1,16 +1,20 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Authentication from './pages/Authentication';
+import './App.css';
+import { Outlet } from 'react-router-dom';
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 
-const App = () => {
+const client = new ApolloClient({
+  uri: '/graphql',
+  cache: new InMemoryCache(),
+});
+
+function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/authentication" element={<Authentication />} />
-        {/* add other page routes when ready */}
-      </Routes>
-    </Router>
+    <ApolloProvider client={client}>
+      <div className="flex-column justify-center align-center min-100-vh bg-primary">
+        <Outlet />
+      </div>
+    </ApolloProvider>
   );
-};
+}
 
 export default App;
