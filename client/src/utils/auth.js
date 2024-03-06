@@ -1,21 +1,18 @@
 import decode from 'jwt-decode';
-// use this to decode a token and get the user's information out of it
 
-// create a new class to instantiate for a user
 class AuthService {
-  // get user data
+  // get user profile information from the decoded token
   getProfile() {
     return decode(this.getToken());
   }
 
-  // check if user's logged in
+  // check if the user is logged in
   loggedIn() {
-    // is there a saved token and is it still valid?
     const token = this.getToken();
     return !!token && !this.isTokenExpired(token);
   }
 
-  // check for expiration
+  // see if the token is expired
   isTokenExpired(token) {
     try {
       const decoded = decode(token);
@@ -27,22 +24,35 @@ class AuthService {
     }
   }
 
+  // get the user token from local storage
   getToken() {
-    // get user from local storage
     return localStorage.getItem('id_token');
   }
 
-  login(idToken) {
-    // then save the user token to local storage
+  // Login user and redirect to their profile page
+  login(idToken, userId, redirectPath = '/') {
     localStorage.setItem('id_token', idToken);
-    window.location.assign('/');
+
+    // call the server route to handle redirection
+    fetch(`/api/redirect/${userId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        const { message, redirectPath } = data;
+        if (message) {
+          console.error(message);
+        } else {
+          window.location.assign(redirectPath);
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching redirection information:', error);
+      });
   }
 
-  logout() {
-    // when the user logs out, clear the token and profile data from local storage
+  // log the user out and redirect to the authentication page (will show login form once state updates)
+  logout(redirectPath = '/authentication') {
     localStorage.removeItem('id_token');
-    // reset the whole window state
-    window.location.assign('/');
+    window.location.assign(redirectPath);
   }
 }
 

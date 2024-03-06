@@ -3,9 +3,13 @@ import { Tabs, Tab } from 'react-bootstrap';
 import Login from '../components/Login/Login';
 import SignUp from '../components/SignUp/SignUp';
 
-
 const Authentication = () => {
   const [key, setKey] = useState('login');
+
+  // reset the state to 'login' when the user is redirected back to this page
+  useEffect(() => {
+    setKey('login');
+  }, []);
 
   return (
     <Tabs

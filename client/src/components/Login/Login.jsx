@@ -27,14 +27,15 @@ const Login = () => {
       const response = await loginUser(userFormData);
 
       if (!response.ok) {
-        throw new Error('something went wrong!');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Something went wrong!');
       }
 
       const { token, user } = await response.json();
       console.log(user);
       Auth.login(token);
     } catch (err) {
-      console.error(err);
+      console.error(err.message);
       setShowAlert(true);
     }
 
@@ -55,12 +56,13 @@ const Login = () => {
         <Form.Group className='mb-3'>
           <Form.Label htmlFor='email'>Email</Form.Label>
           <Form.Control
-            type='email'  // Change type to 'email'
+            type='email'
             placeholder='Your email'
             name='email'
             onChange={handleInputChange}
             value={userFormData.email}
             required
+            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
           />
           <Form.Control.Feedback type='invalid'>Email is required!</Form.Control.Feedback>
         </Form.Group>

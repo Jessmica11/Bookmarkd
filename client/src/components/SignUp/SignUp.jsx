@@ -28,14 +28,15 @@ const SignUp = () => {
       const response = await createUser(userFormData);
 
       if (!response.ok) {
-        throw new Error('something went wrong!');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Something went wrong!');
       }
 
       const { token, user } = await response.json();
       console.log(user);
       Auth.login(token);
     } catch (err) {
-      console.error(err);
+      console.error('Sign-up error:', err.message);
       setShowAlert(true);
     }
 
@@ -98,7 +99,7 @@ const SignUp = () => {
         <Form.Group className='mb-3'>
           <Form.Label htmlFor='bio'>Write a Short Bio</Form.Label>
           <Form.Control
-            type='bio'
+            type='text'
             placeholder='Your bio'
             name='bio'
             onChange={handleInputChange}
