@@ -30,23 +30,29 @@ class AuthService {
   }
 
   // Login user and redirect to their profile page
-  login(idToken, userId, redirectPath = '/') {
-    localStorage.setItem('id_token', idToken);
-
-    // call the server route to handle redirection
-    fetch(`/api/redirect/${userId}`)
-      .then((response) => response.json())
-      .then((data) => {
-        const { message, redirectPath } = data;
-        if (message) {
-          console.error(message);
-        } else {
-          window.location.assign(redirectPath);
-        }
-      })
-      .catch((error) => {
-        console.error('Error fetching redirection information:', error);
+  async loginUser(username, password) {
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
       });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message);
+      }
+
+      const data = await response.json();
+      const { idToken, userId } = data;
+
+      // Store the token locally and redirect
+      this.login(idToken, userId);
+    } catch (error) {
+      console.error('Error logging in:', error.message);
+    }
   }
 
   // log the user out and redirect to the authentication page (will show login form once state updates)
@@ -54,6 +60,7 @@ class AuthService {
     localStorage.removeItem('id_token');
     window.location.assign(redirectPath);
   }
+
 }
 
 export default new AuthService();
