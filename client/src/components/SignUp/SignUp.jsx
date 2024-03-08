@@ -5,7 +5,7 @@ import Auth from '../../utils/auth.js';
 
 const SignUp = () => {
   const [userFormData, setUserFormData] = useState({ username: '', email: '', password: '', bio: '' });
-  const [validated, setValidated] = useState(false);
+  const [validated, setValidated] = useState({ username: false, email: false, password: false });
   const [showAlert, setShowAlert] = useState(false);
 
   const handleInputChange = (event) => {
@@ -18,8 +18,18 @@ const SignUp = () => {
     const form = event.currentTarget;
 
     if (form.checkValidity() === false) {
-      event.stopPropagation();
-      setValidated(true);
+      setValidated({
+        username: !form['username'].checkValidity(),
+        email: !form['email'].checkValidity(),
+        password: !form['password'].checkValidity(),
+      });
+      return;
+    }
+
+    // rely on regex for correct email format
+    const emailPattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
+    if (!emailPattern.test(userFormData.email)) {
+      setValidated((prev) => ({ ...prev, email: true }));
       return;
     }
 
@@ -55,7 +65,7 @@ const SignUp = () => {
         <label htmlFor="username">Username</label>
         <input
           type="text"
-          className="form-control"
+          className={`form-control ${validated.username ? 'is-invalid' : ''}`}
           id="username"
           placeholder="Your username"
           name="username"
@@ -70,7 +80,7 @@ const SignUp = () => {
         <label htmlFor="email">Email</label>
         <input
           type="email"
-          className="form-control"
+          className={`form-control ${validated.email ? 'is-invalid' : ''}`}
           id="email"
           placeholder="Your email address"
           name="email"
@@ -78,14 +88,14 @@ const SignUp = () => {
           value={userFormData.email}
           required
         />
-        <div className="invalid-feedback">Email is required!</div>
+        <div className="invalid-feedback">Email is required and must be in a valid format!</div>
       </div>
 
       <div className="form-group">
         <label htmlFor="password">Password</label>
         <input
           type="password"
-          className="form-control"
+          className={`form-control ${validated.password ? 'is-invalid' : ''}`}
           id="password"
           placeholder="Your password"
           name="password"
@@ -115,7 +125,8 @@ const SignUp = () => {
       <Button
         disabled={!(userFormData.username && userFormData.email && userFormData.password)}
         type="submit"
-        variant="success"
+        className="btn btn-primary my-2 w-100"
+        style={{ border: '1px solid #000000' }}
         onClick={handleFormSubmit}
       >
         Submit
