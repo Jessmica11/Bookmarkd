@@ -1,13 +1,50 @@
 import { gql } from '@apollo/client';
 
-// const LOGIN_USER = gql`
-// for user to log in
+export const LOGIN_USER = gql`
+  mutation login($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      token
+      user {
+        _id
+        username
+        email  // Include the email field in the response
+      }
+    }
+  }
+`;
 
+export const ADD_USER = gql`
+  mutation addUser($username: String!, $email: String!, $password: String!, $bio: String!) {
+    addUser(username: $username, email: $email, password: $password, bio: $bio) {
+      token
+      user {
+        _id
+        username
+        email
+      }
+    }
+  }
+`;
 
-// const ADD_USER = gql`
-// for user to sign up
-
-
-// const ADD_COMMENT = gql`
-// for user to add to book club discussion board
-
+export const ADD_COMMENT = gql`
+  mutation addComment(
+    $bookClubId: ID!
+    $commentText: String!
+    $commentAuthor: String!
+  ) {
+    addComment(
+      bookClubId: $bookClubId
+      commentText: $commentText
+      commentAuthor: $commentAuthor
+    ) {
+      _id
+      bookClubName  // Replace with the actual field name for the book club's name
+      createdAt
+      comments {
+        _id
+        commentText
+        createdAt
+      }
+    }
+  }
+`;
