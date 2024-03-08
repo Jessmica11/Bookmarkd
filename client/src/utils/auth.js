@@ -60,7 +60,6 @@ class AuthService {
     localStorage.removeItem('id_token');
     window.location.assign(redirectPath);
   }
-
 }
 
 export default new AuthService();
