@@ -17,7 +17,6 @@ const commentSchema = new Schema({
   timestamp: {
     type: Date,
     default: Date.now,
-    set: dateFormat, //set the default timestamp to the current date and time
   },
 });
 
