@@ -12,9 +12,16 @@ const Auth = () => {
 
   return (
     <Container className="mt-5">
-      <Row>
-        <Col md={{ span: 6, offset: 3 }}>
-          <Tabs id="authentication-tabs" activeKey={key} onSelect={handleTabSelect} className="mb-3">
+      <Row className="justify-content-center">
+        <Col md={{ span: 6 }}>
+          <Tabs
+            id="authentication-tabs"
+            activeKey={key}
+            onSelect={handleTabSelect}
+            className="mb-3"
+            variant='pills'
+            style={{ gap: '1rem', display: 'flex', justifyContent: 'center' }}
+          >
             <Tab eventKey="login" title="Login">
               <Login />
             </Tab>
