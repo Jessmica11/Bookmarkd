@@ -18,7 +18,7 @@ const bookClubSchema = new Schema({
   ],
   books: [
     {
-      type: Schema.Type.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Book", // Reference to associated Books
     },
   ],
