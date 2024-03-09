@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Tabs, Tab, Container, Row, Col } from 'react-bootstrap';
-import Login from '../components/Login/Login';
+import Login from '../components/Login/Login'; 
 import SignUp from '../components/SignUp/SignUp';
 
 const Auth = () => {
