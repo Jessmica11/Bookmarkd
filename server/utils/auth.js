@@ -4,8 +4,8 @@ const jwt = require('jsonwebtoken');
 const secret = 'B00kmarkd!';
 const expiration = '2h';
 
-function signToken({ id }) {
-  return jwt.sign({ id }, secret, { expiresIn: expiration });
+function signToken({ id, email, username}) {
+  return jwt.sign({ id, email, username }, secret, { expiresIn: expiration });
 }
 
 function verifyToken(token) {
