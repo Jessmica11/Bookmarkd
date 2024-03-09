@@ -2,8 +2,8 @@
 // all of our models and export them as an object
 const User = require('./User');
 const Comment = require('./Comment');
-const Bookclub = require('./Bookclub');
+const BookClub = require('./Bookclub');
 
 // add more as needed
 
-module.exports = { User, Comment, Bookclub };
+module.exports = { User, Comment, BookClub };
