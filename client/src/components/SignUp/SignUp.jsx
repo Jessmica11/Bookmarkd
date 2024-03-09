@@ -1,12 +1,18 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import { createUser } from '../../utils/API';
 import Auth from '../../utils/auth.js';
+import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
+import { ADD_USER } from '../../utils/mutations.js';
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const [userFormData, setUserFormData] = useState({ username: '', email: '', password: '', bio: '' });
   const [validated, setValidated] = useState({ username: false, email: false, password: false });
   const [showAlert, setShowAlert] = useState(false);
+
+  const [addUser, { error }] = useMutation(ADD_USER);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -34,30 +40,25 @@ const SignUp = () => {
     }
 
     try {
-      const response = await createUser(userFormData);
+      const {data} = await addUser({
+        variables: { ...userFormData },
+      });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Something went wrong!');
-      }
+      Auth.login(data.addUser.token);
 
-      const { token, user } = await response.json();
-      console.log(user);
-      Auth.login(token);
+      // redirect the user to the auth page with the login form
+      navigate('/auth'); // Use navigate instead of history.push
     } catch (err) {
       console.error('Sign-up error:', err.message);
       setShowAlert(true);
     }
-
-    setUserFormData({
-      username: '',
-      email: '',
-      password: '',
-      bio: '',
-    });
-
-    setValidated(false);
   };
+
+  useEffect(() => {
+    // Reset validation state and form data after successful form submission
+    setValidated({ username: false, email: false, password: false });
+    setUserFormData({ username: '', email: '', password: '', bio: '' });
+  }, [showAlert]);
 
   return (
     <form>
