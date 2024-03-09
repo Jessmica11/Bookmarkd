@@ -34,4 +34,4 @@ const bookClubSchema = new Schema({
 const BookClub = model('BookClub', bookClubSchema);
 
 // Export the BookClub model for use in other files
-model.exports = BookClub
+module.exports = BookClub
