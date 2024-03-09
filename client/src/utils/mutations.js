@@ -7,7 +7,7 @@ export const LOGIN_USER = gql`
       user {
         _id
         username
-        email  // Include the email field in the response
+        email
       }
     }
   }
@@ -38,7 +38,7 @@ export const ADD_COMMENT = gql`
       commentAuthor: $commentAuthor
     ) {
       _id
-      bookClubName  // Replace with the actual field name for the book club's name
+      bookClubName 
       createdAt
       comments {
         _id

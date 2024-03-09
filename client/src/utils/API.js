@@ -1,17 +1,16 @@
 // get logged-in user's info
 export const getMe = (token) => {
-  return fetch('/api/users/me', {
+  return fetch('/api/users', {
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
   })
-  .then(response => {
-    if (!response.ok) {
+    .then(response => response.json())
+    .catch(error => {
+      console.error('Error fetching user data:', error.message);
       throw new Error('Failed to fetch user data');
-    }
-    return response.json();
-  });
+    });
 };
 
 // get logged-in user's bio
@@ -22,12 +21,11 @@ export const getUserBio = (token) => {
       Authorization: `Bearer ${token}`,
     },
   })
-  .then(response => {
-    if (!response.ok) {
+    .then(response => response.json())
+    .catch(error => {
+      console.error('Error fetching user bio:', error.message);
       throw new Error('Failed to fetch user bio');
-    }
-    return response.json();
-  });
+    });
 };
 
 // get logged-in user's comments
@@ -38,29 +36,27 @@ export const getUserComments = (token) => {
       Authorization: `Bearer ${token}`,
     },
   })
-  .then(response => {
-    if (!response.ok) {
+    .then(response => response.json())
+    .catch(error => {
+      console.error('Error fetching user comments:', error.message);
       throw new Error('Failed to fetch user comments');
-    }
-    return response.json();
-  });
+    });
 };
 
 // create a new user's account
 export const createUser = (userData) => {
-  return fetch('/api/users', {
+  return fetch('/api/createUsersFromJson', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(userData),
   })
-  .then(response => {
-    if (!response.ok) {
+    .then(response => response.json())
+    .catch(error => {
+      console.error('Error creating user:', error.message);
       throw new Error('Failed to create user');
-    }
-    return response.json();
-  });
+    });
 };
 
 // log the user in
@@ -72,12 +68,11 @@ export const loginUser = (userData) => {
     },
     body: JSON.stringify(userData),
   })
-  .then(response => {
-    if (!response.ok) {
+    .then(response => response.json())
+    .catch(error => {
+      console.error('Error logging in:', error.message);
       throw new Error('Failed to log in');
-    }
-    return response.json();
-  });
+    });
 };
 
 // delete the user's account and associated comments
@@ -89,10 +84,9 @@ export const deleteUser = (token) => {
       Authorization: `Bearer ${token}`,
     },
   })
-  .then(response => {
-    if (!response.ok) {
+    .then(response => response.json())
+    .catch(error => {
+      console.error('Error deleting user:', error.message);
       throw new Error('Failed to delete user');
-    }
-    return response.json();
-  });
+    });
 };

@@ -1,30 +1,28 @@
 import * as decode from 'jwt-decode';
 
 class AuthService {
-  // get user profile information from the decoded token
+  // Get user profile information from the decoded token
   getProfile() {
     return decode(this.getToken());
   }
 
-  // check if the user is logged in
+  // Check if the user is logged in
   loggedIn() {
     const token = this.getToken();
     return !!token && !this.isTokenExpired(token);
   }
 
-  // see if the token is expired
+  // See if the token is expired
   isTokenExpired(token) {
     try {
       const decoded = decode(token);
-      if (decoded.exp < Date.now() / 1000) {
-        return true;
-      } else return false;
+      return decoded.exp < Date.now() / 1000;
     } catch (err) {
       return false;
     }
   }
 
-  // get the user token from local storage
+  // Get the user token from local storage
   getToken() {
     return localStorage.getItem('id_token');
   }
@@ -41,8 +39,8 @@ class AuthService {
       });
 
       if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.message);
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
       }
 
       const data = await response.json();
@@ -52,13 +50,20 @@ class AuthService {
       this.login(idToken, userId);
     } catch (error) {
       console.error('Error logging in:', error.message);
+      // Handle the error (e.g., show a user-friendly error message)
     }
   }
 
-  // log the user out and redirect to the authentication page (will show login form once state updates)
+  // Log the user out and redirect to the authentication page (will show login form once state updates)
   logout(redirectPath = '/authentication') {
     localStorage.removeItem('id_token');
     window.location.assign(redirectPath);
+  }
+
+  // Log the user in and store the token
+  login(idToken, userId) {
+    localStorage.setItem('id_token', idToken);
+    // Add any additional logic after successful login, if needed
   }
 }
 
