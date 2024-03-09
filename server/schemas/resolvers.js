@@ -1,5 +1,4 @@
-// resolvers.js
-
+const {signToken} = require("../utils/auth");
 const { BookClub, Comment, User } = require("../models");
 
 const resolvers = {
@@ -38,6 +37,35 @@ const resolvers = {
   },
 
   Mutation: {
+
+    addUser: async (parent, { username, email, password, bio }) => {
+      try {
+        const user = await User.create({ username, email, password, bio });
+        const token = signToken(user);
+        return {user, token};
+      } catch (error) {
+        console.error("Error creating user:", error);
+        throw error;
+      }
+    },
+
+    login: async (parent, { email, password }) => {
+      try {
+        const user = await authenticateUser(email, password);
+
+        if (!user) {
+          throw new Error("Incorrect email or password");
+        }
+
+        const token = signToken(user);
+        return { token, user };
+      } catch (error) {
+        console.error("Error during login:", error);
+        throw error;
+      }
+    },
+          
+
     joinBookClub: async (parent, { userId, bookClubId }) => {
       try {
         const updatedUser = await User.findOneAndUpdate(

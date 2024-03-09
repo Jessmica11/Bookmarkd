@@ -18,6 +18,11 @@ const typeDefs = `
     timestamp: String
   }
 
+  type Auth {
+    token: ID!
+    user: User
+  }
+
   type User {
     _id: ID
     username: String
@@ -45,6 +50,8 @@ const typeDefs = `
       userId: ID!
       commentText: String!
     ): BookClub
+    login(email:String!, password:String!): Auth
+    addUser(username: String!, email: String!, password: String!, bio: String!): Auth
   }
 `;
 
