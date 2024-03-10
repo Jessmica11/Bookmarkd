@@ -23,9 +23,9 @@ const userSchema = new Schema({
   },
   bio: {
     type: String,
-    required: false, //bios are optional
+    required: true,
     minlength: 2,
-    maxlength: 300, //max/minlength limits users bio
+    maxlength: 280, 
   
   },
   book_clubs: [
