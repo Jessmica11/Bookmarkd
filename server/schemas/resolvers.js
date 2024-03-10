@@ -1,16 +1,17 @@
-const {signToken} = require("../utils/auth");
+const { signToken, authenticateUser } = require("../utils/auth");
 const { BookClub, Comment, User } = require("../models");
 
 const resolvers = {
   Query: {
+    //good
     bookClubs: async () => {
       return BookClub.find({});
     },
-
+    //good
     bookClubById: async (parent, { id }) => {
       return BookClub.findOne({ _id: id });
     },
-
+    //good
     usersInBookClub: async (parent, { bookClubId }) => {
       try {
         const bookClub = await BookClub.findOne({ _id: bookClubId }).populate(
@@ -22,7 +23,7 @@ const resolvers = {
         throw error;
       }
     },
-
+    //good
     bookClubComments: async (parent, { bookClubId }) => {
       try {
         const bookClub = await BookClub.findOne({ _id: bookClubId }).populate(
@@ -37,12 +38,12 @@ const resolvers = {
   },
 
   Mutation: {
-
+    //good
     addUser: async (parent, { username, email, password, bio }) => {
       try {
         const user = await User.create({ username, email, password, bio });
         const token = signToken(user);
-        return {user, token};
+        return { user, token };
       } catch (error) {
         console.error("Error creating user:", error);
         throw error;
@@ -64,8 +65,8 @@ const resolvers = {
         throw error;
       }
     },
-          
 
+    //good
     joinBookClub: async (parent, { userId, bookClubId }) => {
       try {
         const updatedUser = await User.findOneAndUpdate(
@@ -73,21 +74,28 @@ const resolvers = {
           { $addToSet: { book_clubs: bookClubId } },
           { new: true, runValidators: true }
         );
-        return updatedUser;
+
+        const updatedBookClub = await BookClub.findOneAndUpdate(
+          { _id: bookClubId },
+          { $addToSet: { members: userId } },
+          { new: true, runValidators: true }
+        );
+
+        return { user: updatedUser, bookClub: updatedBookClub };
       } catch (error) {
         console.error("Error joining book club:", error);
         throw error;
       }
     },
-
+    //timeStamp = null but comment shows up under bookClub & user model
     addCommentToBookClub: async (
       parent,
-      { bookClubId, userId, commentText }
-    ) => {
+      { bookClubId, userId, commentText }) => {
       try {
         const newComment = new Comment({
           content: commentText,
           user: userId,
+          // timestamp: new Date(),
         });
 
         const updatedBookClub = await BookClub.findOneAndUpdate(
@@ -96,7 +104,13 @@ const resolvers = {
           { new: true, runValidators: true }
         );
 
-        return updatedBookClub;
+        const updatedUser = await User.findOneAndUpdate(
+          { _id: userId },
+          { $push: { comments: newComment } },
+          { new: true, runValidators: true }
+        );
+
+        return { user: updatedUser, bookClub: updatedBookClub }
       } catch (error) {
         console.error("Error adding comment to book club:", error);
         throw error;
