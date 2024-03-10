@@ -44,14 +44,22 @@ const typeDefs = `
   }
 
   type Mutation {
-    joinBookClub(userId: ID!, bookClubId: ID!): User
+    joinBookClub(userId: ID!, bookClubId: ID!): JoinBookClubResponse
     addCommentToBookClub(
       bookClubId: ID!
       userId: ID!
       commentText: String!
-    ): BookClub
+    ): JoinCommentResponse
     login(email:String!, password:String!): Auth
     addUser(username: String!, email: String!, password: String!, bio: String!): Auth
+  }
+  type JoinBookClubResponse {
+    user: User
+    bookClub: BookClub
+  }
+  type JoinCommentResponse {
+    user: User
+    bookClub: BookClub
   }
 `;
 
