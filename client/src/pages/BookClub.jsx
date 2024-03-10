@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-
 const BookClub = () => {
     const { bookClubId } = useParams();
-    const [book, setBook] = useState(null);
+    const [bookClub, setBookClub] = useState(null);
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         fetchBookDetails();
@@ -15,50 +16,62 @@ const BookClub = () => {
 
     const fetchBookDetails = async () => {
         try {
-            const response = await fetch(`/graphql?query={bookClub(id:${bookClubId}){book{title, imageUrl, description}}}`);
+            setLoading(true);
+            const response = await fetch(`/graphql?query={bookClub(id: "${bookClubId}"){name, book{title, imageUrl, description}}}`);
             const data = await response.json();
-            setBook(data.bookClub.book);
+            setBookClub(data.data.bookClub);
+            setLoading(false);
         } catch (error) {
-            console.error('Error fetching book details:', error);
+            setError('Error fetching book club details');
+            setLoading(false);
         }
     };
 
     const fetchComments = async () => {
         try {
-            const response = await fetch(`/graphql?query={bookClub(id:${bookClubId}){comments{id, text, user{name}}}}`);
+            setLoading(true);
+            const response = await fetch(`/graphql?query={bookClub(id: "${bookClubId}"){comments{id, text, user{name}}}}`);
             const data = await response.json();
-            setComments(data.bookClub.comments);
+            setComments(data.data.bookClub.comments);
+            setLoading(false);
         } catch (error) {
-            console.error('Error fetching comments:', error);
+            setError('Error fetching comments');
+            setLoading(false);
         }
     };
 
     const handleSubmitComment = async (event) => {
         event.preventDefault();
         try {
+            setLoading(true);
             await fetch('/graphql', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ query: `mutation { addComment(bookClubId: ${bookClubId}, text: "${newComment}") { id } }` })
+                body: JSON.stringify({ query: `mutation { addComment(bookClubId: "${bookClubId}", text: "${newComment}") { id } }` })
             });
             fetchComments();
             setNewComment('');
+            setLoading(false);
         } catch (error) {
-            console.error('Error adding comment:', error);
+            setError('Error adding comment');
+            setLoading(false);
         }
     };
 
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error}</div>;
+
     return (
         <div>
-            <h1>Book Club</h1>
-            {book && (
+            <h1>{bookClub && bookClub.name}</h1>
+            {bookClub && (
                 <div>
-                    <img src={book.imageUrl} alt={book.title} />
-                    <p>{book.description}</p>
+                    <img src={bookClub.book.imageUrl} alt={bookClub.book.title} />
+                    <p>{bookClub.book.description}</p>
                 </div>
             )}
             <div>
-                <h2>Discussion</h2>
+                <h2>Join the Discussion</h2>
                 <div>
                     <form onSubmit={handleSubmitComment}>
                         <textarea

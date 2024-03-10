@@ -88,9 +88,7 @@ const resolvers = {
       }
     },
     //timeStamp = null but comment shows up under bookClub & user model
-    addCommentToBookClub: async (
-      parent,
-      { bookClubId, userId, commentText }) => {
+    addCommentToBookClub: async (parent, { bookClubId, userId, commentText }) => {
       try {
         const newComment = new Comment({
           content: commentText,
@@ -110,7 +108,7 @@ const resolvers = {
           { new: true, runValidators: true }
         );
 
-        return { user: updatedUser, bookClub: updatedBookClub }
+        return { user: updatedUser, bookClub: updatedBookClub };
       } catch (error) {
         console.error("Error adding comment to book club:", error);
         throw error;

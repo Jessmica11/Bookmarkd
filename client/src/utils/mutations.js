@@ -48,3 +48,20 @@ export const ADD_COMMENT = gql`
     }
   }
 `;
+
+export const JOIN_BOOK_CLUB = gql`
+  mutation joinBookClub($userId: ID!, $bookClubId: ID!) {
+    joinBookClub(userId: $userId, bookClubId: $bookClubId) {
+      user {
+        _id
+        username
+        email
+      }
+      bookClub {
+        _id
+        name
+      }
+    }
+  }
+`;
+

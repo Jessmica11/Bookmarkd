@@ -1,7 +1,6 @@
-// const { gql } = require("apollo-server");
+const { gql } = require("apollo-server");
 
-const typeDefs = `
-
+const typeDefs = gql`
   type BookClub {
     _id: ID
     name: String
@@ -36,7 +35,7 @@ const typeDefs = `
     _id: ID
   }
 
-    type Query {
+  type Query {
     bookClubs: [BookClub!]!
     bookClubById(id: ID!): BookClub
     usersInBookClub(bookClubId: ID!): [User]
@@ -45,18 +44,16 @@ const typeDefs = `
 
   type Mutation {
     joinBookClub(userId: ID!, bookClubId: ID!): JoinBookClubResponse
-    addCommentToBookClub(
-      bookClubId: ID!
-      userId: ID!
-      commentText: String!
-    ): JoinCommentResponse
-    login(email:String!, password:String!): Auth
+    addCommentToBookClub(bookClubId: ID!, userId: ID!, commentText: String!): JoinCommentResponse
+    login(email: String!, password: String!): Auth
     addUser(username: String!, email: String!, password: String!, bio: String!): Auth
   }
+
   type JoinBookClubResponse {
     user: User
     bookClub: BookClub
   }
+
   type JoinCommentResponse {
     user: User
     bookClub: BookClub
