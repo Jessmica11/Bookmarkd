@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './Carousel.css';
 
 const _items = [
@@ -39,12 +39,6 @@ const _items = [
   },
 ];
 
-const length = _items.length;
-
-const sleep = (ms = 0) => {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-};
-
 const CarouselSlideItem = ({ item, active }) => {
   return (
     <li className={`carousel__slide-item ${active ? 'active' : ''}`}>
@@ -62,26 +56,11 @@ const CarouselSlideItem = ({ item, active }) => {
 };
 
 const Carousel = () => {
-  const [activeIdx, setActiveIdx] = useState(0);
-
-  const prevClick = () => {
-    setActiveIdx((prev) => (prev - 1 + length) % length);
-  };
-
-  const nextClick = () => {
-    setActiveIdx((prev) => (prev + 1) % length);
-  };
+  const [activeIdx] = useState(0);
 
   return (
     <div className="carousel__wrap">
       <div className="carousel__inner">
-        <button
-          className="carousel__btn carousel__btn--prev"
-          onClick={prevClick}
-        >
-          <i className="carousel__btn-arrow carousel__btn-arrow--left" />
-        </button>
-
         <div className="carousel__container">
           <ul className="carousel__slide-list">
             {_items.map((item, i) => (
@@ -93,13 +72,6 @@ const Carousel = () => {
             ))}
           </ul>
         </div>
-
-        <button
-          className="carousel__btn carousel__btn--next"
-          onClick={nextClick}
-        >
-          <i className="carousel__btn-arrow carousel__btn-arrow--right" />
-        </button>
       </div>
     </div>
   );

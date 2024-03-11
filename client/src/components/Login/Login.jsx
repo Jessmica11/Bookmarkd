@@ -43,9 +43,11 @@ const Login = () => {
         <Form.Control type="password" placeholder="Password" name="password" value={userFormData.password} onChange={handleInputChange} />
       </Form.Group>
 
-      <Button variant="primary" type="submit">
-        Submit
-      </Button>
+      <div style={{ margin: '20px 0' }}> {/* Add margin around the button */}
+        <Button variant="primary" type="submit">
+          Submit
+        </Button>
+      </div>
 
       {showAlert && <Alert variant="danger">Invalid credentials. Please try again.</Alert>}
     </Form>

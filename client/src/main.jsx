@@ -1,14 +1,25 @@
-import ReactDOM from 'react-dom/client';
+import ReactDOM from 'react-dom';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import React from 'react'
+
 import App from './App';
 import Home from './pages/Home';
 import Auth from './pages/Auth';
+import Profile from './pages/Profile';
+import Header from './components/Header';
+import Footer from './components/Footer';
+// import Nav from './components/Nav';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
+    element: (
+      <>
+        <Header />
+        {/* <Nav /> */}
+        <App />
+        <Footer />
+      </>
+    ),
     children: [
       {
         path: '/home',
@@ -19,6 +30,10 @@ const router = createBrowserRouter([
         path: '/auth',
         element: <Auth />
       },
+      {
+        path: '/profile',
+        element: <Profile />
+      }
     ]
   }
 ]);

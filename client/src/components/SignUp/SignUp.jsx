@@ -1,5 +1,3 @@
-// SignUp.js
-
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import { useMutation } from '@apollo/client';
@@ -53,9 +51,11 @@ const SignUp = () => {
         <Form.Control type="text" placeholder="Enter bio" name="bio" value={userFormData.bio} onChange={handleInputChange} />
       </Form.Group>
 
-      <Button variant="primary" type="submit">
-        Submit
-      </Button>
+      <div style={{ margin: '20px 0' }}>
+        <Button variant="primary" type="submit">
+          Submit
+        </Button>
+      </div>
 
       {showAlert && <Alert variant="danger">Sign up failed. Please try again.</Alert>}
     </Form>

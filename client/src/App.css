@@ -454,11 +454,11 @@ a:hover {
 }
 
 .min-100-vh {
-  min-height: 100vh;
+  min-height: 60vh;
 }
 
 .min-100-vw {
-  min-width: 100vw;
+  min-width: 90vw;
 }
 
 /* MARGIN/PADDING UTILS */
