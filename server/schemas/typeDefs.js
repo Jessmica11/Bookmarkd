@@ -1,6 +1,6 @@
-const { gql } = require("apollo-server");
+// const { gql } = require("apollo-server");
 
-const typeDefs = gql`
+const typeDefs = `
   type BookClub {
     _id: ID
     name: String
@@ -46,7 +46,7 @@ const typeDefs = gql`
     joinBookClub(userId: ID!, bookClubId: ID!): JoinBookClubResponse
     addCommentToBookClub(bookClubId: ID!, userId: ID!, commentText: String!): JoinCommentResponse
     login(email: String!, password: String!): Auth
-    addUser(username: String!, email: String!, password: String!, bio: String!): Auth
+    addUser(username: String!, email: String!, password: String!, bio: String): Auth
   }
 
   type JoinBookClubResponse {

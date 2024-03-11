@@ -1,22 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Tabs, Tab, Container, Row, Col } from 'react-bootstrap';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import Login from '../components/Login/Login'; 
 import SignUp from '../components/SignUp/SignUp';
-import Auth from '../utils/auth';
+import AuthUtil from '../utils/authUtils'; // Corrected import name
 
-const Auth = () => {
+const AuthPage = () => {
   const [key, setKey] = useState('login');
-  const history = useHistory();
   const location = useLocation();
 
   useEffect(() => {
-    // Redirect to login tab if user is not logged in and trying to access other pages
-    if (!Auth.loggedIn() && location.pathname !== '/auth') {
-      history.push('/auth');
+    // redirect to login tab if user is not logged in and trying to access other pages
+    if (!AuthUtil.loggedIn() && location.pathname !== '/auth') {
+      window.location.href = '/auth'; // Redirect to the authentication page
       setKey('login');
     }
-  }, [location, history]);
+  }, [location]);
 
   const handleTabSelect = (selectedKey) => {
     setKey(selectedKey);
@@ -47,4 +46,4 @@ const Auth = () => {
   );
 };
 
-export default Auth;
+export default AuthPage;

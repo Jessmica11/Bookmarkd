@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
+import React from 'react';
 import { GET_BOOK_CLUB_DETAILS } from './queries';
 
 const BookClubDetails = () => {

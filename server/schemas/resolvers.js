@@ -52,13 +52,18 @@ const resolvers = {
 
     login: async (parent, { email, password }) => {
       try {
+        console.log("Attempting login with email:", email);
         const user = await authenticateUser(email, password);
 
         if (!user) {
+          console.log("Authentication failed for email:", email);
           throw new Error("Incorrect email or password");
         }
-
+        console.log("User authenticated:", user);
         const token = signToken(user);
+
+        console.log("Token generated for user:", user._id);
+
         return { token, user };
       } catch (error) {
         console.error("Error during login:", error);
@@ -88,7 +93,10 @@ const resolvers = {
       }
     },
     //timeStamp = null but comment shows up under bookClub & user model
-    addCommentToBookClub: async (parent, { bookClubId, userId, commentText }) => {
+    addCommentToBookClub: async (
+      parent,
+      { bookClubId, userId, commentText }
+    ) => {
       try {
         const newComment = new Comment({
           content: commentText,
