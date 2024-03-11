@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import './Carousel.css';
+import { Link } from 'react-router-dom';
+import '../Carousel/Carousel.css';
 
 const _items = [
   {
@@ -42,7 +43,7 @@ const _items = [
 const CarouselSlideItem = ({ item, active }) => {
   return (
     <li className={`carousel__slide-item ${active ? 'active' : ''}`}>
-      <a href="/your-target-page">
+      <Link to={`/book-club/${item.bookclub.id}`}>
         <div className="carousel__slide-item-img-link">
           <img src={item.bookclub.image} alt={item.bookclub.name} />
         </div>
@@ -50,7 +51,7 @@ const CarouselSlideItem = ({ item, active }) => {
           <h4>{item.bookclub.name}</h4>
           <p>{item.bookclub.desc}</p>
         </div>
-      </a>
+      </Link>
     </li>
   );
 };

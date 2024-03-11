@@ -5,7 +5,7 @@ const Footer = () => {
   const navigate = useNavigate();
 
   return (
-    <footer className="bg-secondary p-4" style={{ marginTop: 'auto' }}>
+    <footer className="bg-secondary p-3" style={{ marginTop: 'auto' }}>
       <div className="container text-center">
         {location.pathname !== '/' && (
           <button className="btn btn-dark mb-3" onClick={() => navigate(-1)}>

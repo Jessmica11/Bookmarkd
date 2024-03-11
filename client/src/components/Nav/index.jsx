@@ -1,8 +1,4 @@
 import { Link } from 'react-router-dom';
-import { loggedIn } from '../../utils/authUtils';
-
-const Nav = () => {
-  const isLoggedIn = loggedIn();
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -19,23 +15,10 @@ const Nav = () => {
             <li className="nav-item">
               <Link className="nav-link" to="/about">About</Link>
             </li>
-            {isLoggedIn ? (
-              <li className="nav-item">
-                <Link className="nav-link" to="/dashboard">Dashboard</Link>
-              </li>
-            ) : (
-              <li className="nav-item">
-                <Link className="nav-link" to="/login">Login</Link>
-              </li>
-            )}
-            <li className="nav-item">
-              <Link className="nav-link" to="/contact">Contact</Link>
-            </li>
           </ul>
         </div>
       </div>
     </nav>
   );
-};
 
 export default Nav;
