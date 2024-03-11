@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import { useMutation } from '@apollo/client';
 import { ADD_USER } from '../../utils/mutations';
-import Auth from '../../utils/authUtils'
+import Auth from '../../utils/authUtils';
 
 const SignUp = () => {
   const [userFormData, setUserFormData] = useState({ username: '', email: '', password: '', bio: '' });
@@ -29,6 +29,10 @@ const SignUp = () => {
     }
   };
 
+  // show the user the character count as they type
+  const maxBioLength = 280;
+  const remainingCharacters = maxBioLength - userFormData.bio.length;
+
   return (
     <Form onSubmit={handleFormSubmit}>
       <Form.Group controlId="formBasicUsername">
@@ -48,7 +52,8 @@ const SignUp = () => {
 
       <Form.Group controlId="formBasicBio">
         <Form.Label>Bio</Form.Label>
-        <Form.Control type="text" placeholder="Enter bio" name="bio" value={userFormData.bio} onChange={handleInputChange} />
+        <Form.Control type="text" placeholder="Enter bio" name="bio" value={userFormData.bio} onChange={handleInputChange} size="lg" />
+        <small>{remainingCharacters} characters left</small>
       </Form.Group>
 
       <div style={{ margin: '20px 0' }}>
