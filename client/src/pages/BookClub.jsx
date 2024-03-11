@@ -1,99 +1,65 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import bookClubsData from '../components/BookClubs/BookClubsData'; // Import bookClubsData.js
+import { useMutation, useQuery } from '@apollo/client';
+import { QUERY_CURRENT_USER, QUERY_BOOK_CLUB_COMMENTS } from '../utils/queries';
+import { JOIN_BOOK_CLUB } from '../utils/mutations';
+import BookClubDetails from '../components/BookClubs/BookClubDetails.jsx';
+import CommentForm from '../components/CommentForm/CommentForm.jsx';
+import CommentList from '../components/CommentList/CommentList.jsx';
 
 const BookClub = () => {
     const { bookClubId } = useParams();
-    const [bookClub, setBookClub] = useState(null);
-    const [comments, setComments] = useState([]);
-    const [newComment, setNewComment] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [joined, setJoined] = useState(false); 
 
-    useEffect(() => {
-        fetchBookDetails();
-        fetchComments();
-    }, [bookClubId]);
+    // useMutation hook for JOIN_BOOK_CLUB mutation
+    const [joinBookClub] = useMutation(JOIN_BOOK_CLUB);
 
-    const fetchBookDetails = async () => {
+    // get the current user's data
+    const { loading: userLoading, data: userData } = useQuery(QUERY_CURRENT_USER);
+
+    // Fetch comments for the book club
+    const { loading: commentsLoading, data: commentsData } = useQuery(QUERY_BOOK_CLUB_COMMENTS, {
+        variables: { bookClubId },
+    });
+
+    const handleSubmitComment = (newComment) => {
+        // Here you can implement the logic to submit the comment to the backend
+    };
+
+    const handleJoinClub = async () => {
         try {
-            setLoading(true);
-            const response = await fetch(`/graphql?query={bookClub(id: "${bookClubId}"){name, book{title, imageUrl, description}}}`);
-            const data = await response.json();
-            setBookClub(data.data.bookClub);
-            setLoading(false);
+            // get the user ID from the userData object
+            const userId = userData?.me?._id;
+            if (!userId) {
+                console.error('User ID not found.');
+                return;
+            }
+            
+            // call the JOIN_BOOK_CLUB mutation so the user can join the book club
+            await joinBookClub({ variables: { userId, bookClubId } });
+            // if mutation works, update the joined state
+            setJoined(true);
         } catch (error) {
-            setError('Error fetching book club details');
-            setLoading(false);
+            console.error('Error joining book club:', error);
+            // error handling
         }
     };
 
-    const fetchComments = async () => {
-        try {
-            setLoading(true);
-            const response = await fetch(`/graphql?query={bookClub(id: "${bookClubId}"){comments{id, text, user{name}}}}`);
-            const data = await response.json();
-            setComments(data.data.bookClub.comments);
-            setLoading(false);
-        } catch (error) {
-            setError('Error fetching comments');
-            setLoading(false);
-        }
-    };
-
-    const handleSubmitComment = async (event) => {
-        event.preventDefault();
-        try {
-            setLoading(true);
-            await fetch('/graphql', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ query: `mutation { addComment(bookClubId: "${bookClubId}", text: "${newComment}") { id } }` })
-            });
-            fetchComments();
-            setNewComment('');
-            setLoading(false);
-        } catch (error) {
-            setError('Error adding comment');
-            setLoading(false);
-        }
-    };
-
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
+    if (userLoading || commentsLoading) return <p>Loading...</p>;
 
     return (
         <div>
-            <h1>{bookClub && bookClub.name}</h1>
-            {bookClub && (
-                <div>
-                    <img src={bookClub.book.imageUrl} alt={bookClub.book.title} />
-                    <p>{bookClub.book.description}</p>
-                </div>
-            )}
+            <BookClubDetails bookClubId={bookClubId} />
             <div>
+                {/* show the join button if not logged in */}
+                {!joined && (
+                    <button onClick={handleJoinClub}>Join Club</button>
+                )}
+                {/* tell the user it worked */}
+                {joined && <p>Successfully joined the book club!</p>}
                 <h2>Join the Discussion</h2>
-                <div>
-                    <form onSubmit={handleSubmitComment}>
-                        <textarea
-                            value={newComment}
-                            onChange={(e) => setNewComment(e.target.value)}
-                            placeholder="Add your comment"
-                            required
-                        ></textarea>
-                        <button type="submit">Submit</button>
-                    </form>
-                </div>
-                <div>
-                    <h3>Comments</h3>
-                    <ul>
-                        {comments.map(comment => (
-                            <li key={comment.id}>
-                                <strong>{comment.user.name}</strong>: {comment.text}
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+                <CommentForm onSubmit={handleSubmitComment} />
+                <CommentList comments={commentsData.bookClubComments} />
             </div>
         </div>
     );

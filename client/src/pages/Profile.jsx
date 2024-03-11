@@ -1,61 +1,59 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import { useQuery } from '@apollo/client';
+import { QUERY_CURRENT_USER } from '../utils/queries';
 
 const Profile = () => {
-  const { userId } = useParams();
-  const [userData, setUserData] = useState(null);
+  const { loading, error, data } = useQuery(QUERY_CURRENT_USER);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await axios.get(`/api/users/${userId}`);
-        setUserData(response.data);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
+    if (data && data.me) {
+      setCurrentUser(data.me);
+    }
+  }, [data]);
 
-    fetchUserData();
-  }, [userId]);
-
-  // Function to render ribbon for each month
   const renderRibbon = (month, participated) => {
     const ribbonImageUrl = participated ? 'color-ribbon.jpg' : 'gray-ribbon.jpg';
     return <img src={ribbonImageUrl} alt={`${month} Ribbon`} />;
   };
 
   return (
-    <div>
-      <h1>Profile</h1>
-      {userData && (
-        <div>
-          <img src={userData.profilePhotoUrl} alt="Profile" style={{ float: 'left', marginRight: '20px' }} />
-          <div>
-            <h2>About Me</h2>
-            <p>Favorite Book: {userData.aboutMe.favoriteBook}</p>
-            <p>Favorite Coffee: {userData.aboutMe.favoriteCoffee}</p>
-            <p>Favorite Author: {userData.aboutMe.favoriteAuthor}</p>
-            <p>Favorite Genre: {userData.aboutMe.favoriteGenre}</p>
-            <p>Favorite Quote: {userData.aboutMe.favoriteQuote}</p>
-            <p>Favorite Place to Read: {userData.aboutMe.favoritePlaceToRead}</p>
-          </div>
-        </div>
-      )}
+  <div>
+    <h1>Profile</h1>
+    {loading && <p>Loading...</p>}
+    {error && <p>Error fetching user data: {error.message}</p>}
+    {currentUser && (
       <div>
-        <h2>Reading Rewards</h2>
+        <img src='' alt="Profile" style={{ float: 'left', marginRight: '20px' }} />
         <div>
-          {userData &&
-            Object.entries(userData.readingRewards).map(([month, participated]) => (
-              <div key={month} style={{ display: 'inline-block', marginRight: '10px' }}>
-                {renderRibbon(month, participated)}
-                <p>{month}</p>
-              </div>
-            ))}
+          <p><strong>About Me</strong></p>
+          <p>{currentUser.bio}</p>
+          <h2>Favorite Details</h2>
+          <ul className="list-unstyled">
+            <li><strong>Favorite Book:</strong> </li>
+            <li><strong>Favorite Coffee:</strong> </li>
+            <li><strong>Favorite Author:</strong> </li>
+            <li><strong>Favorite Genre:</strong> </li>
+            <li><strong>Favorite Quote:</strong> </li>
+            <li><strong>Favorite Place to Read:</strong> </li>
+          </ul>
         </div>
       </div>
+    )}
+    <div>
+      <h2>Reading Rewards</h2>
+      <div>
+        {currentUser &&
+          Object.entries(currentUser.readingRewards).map(([month, participated]) => (
+            <div key={month} style={{ display: 'inline-block', marginRight: '10px' }}>
+              {renderRibbon(month, participated)}
+              <p>{month}</p>
+            </div>
+          ))}
+      </div>
     </div>
-  );
-};
+  </div>
+);
+}
 
 export default Profile;
