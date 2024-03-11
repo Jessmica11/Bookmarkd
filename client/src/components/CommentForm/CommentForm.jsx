@@ -1,25 +1,45 @@
 import React, { useState } from 'react';
+import { Form, Button, Alert } from 'react-bootstrap';
+import { useMutation } from '@apollo/client';
+import { ADD_COMMENT } from '../../utils/mutations';
 
-const CommentForm = ({ onSubmit }) => {
+const CommentForm = ({ bookClubId }) => {
   const [newComment, setNewComment] = useState('');
+  const [addComment, { error }] = useMutation(ADD_COMMENT);
 
-  const handleCommentSubmit = (event) => {
+  const handleCommentSubmit = async (event) => {
     event.preventDefault();
-    onSubmit(newComment);
-    setNewComment('');
+    
+    try {
+      await addComment({
+        variables: {
+          bookClubId: bookClubId,
+          commentText: newComment,
+          commentAuthor: 'User', 
+        }
+      });
+      setNewComment('');
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
-    <form onSubmit={handleCommentSubmit}>
-      <label>
-        New Comment:
-        <textarea
+    <Form onSubmit={handleCommentSubmit}>
+      <Form.Group controlId="formBasicComment">
+        <Form.Label>New Comment:</Form.Label>
+        <Form.Control
+          as="textarea"
+          rows={3}
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
         />
-      </label>
-      <button type="submit">Submit Comment</button>
-    </form>
+      </Form.Group>
+      <Button variant="primary" type="submit">
+        Add Your Comment
+      </Button>
+      {error && <Alert variant="danger">Error adding comment. Please try again.</Alert>}
+    </Form>
   );
 };
 
