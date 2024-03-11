@@ -1,8 +1,7 @@
-// Login.js
-
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import { useMutation } from '@apollo/client';
+import { useHistory } from 'react-router-dom';
 import { LOGIN_USER } from '../../utils/mutations';
 import Auth from '../../utils/authUtils'
 
@@ -10,6 +9,7 @@ const Login = () => {
   const [userFormData, setUserFormData] = useState({ email: '', password: '' });
   const [showAlert, setShowAlert] = useState(false);
   const [loginUser, { error }] = useMutation(LOGIN_USER);
+  const history = useHistory();
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -25,6 +25,9 @@ const Login = () => {
       });
 
       Auth.login(data.login.token);
+      // the user will be redirected to their profile page after logging in
+      history.push('/profile');
+
     } catch (err) {
       console.error(err);
       setShowAlert(true);
@@ -43,11 +46,9 @@ const Login = () => {
         <Form.Control type="password" placeholder="Password" name="password" value={userFormData.password} onChange={handleInputChange} />
       </Form.Group>
 
-      <div style={{ margin: '20px 0' }}> {/* Add margin around the button */}
-        <Button variant="primary" type="submit">
-          Submit
-        </Button>
-      </div>
+      <Button variant="primary" type="submit">
+        Submit
+      </Button>
 
       {showAlert && <Alert variant="danger">Invalid credentials. Please try again.</Alert>}
     </Form>
