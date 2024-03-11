@@ -6,7 +6,7 @@ import bookClubsData from '../BookClubs/BookClubsData';
 const CarouselSlideItem = ({ item, active }) => {
   return (
     <li className={`carousel__slide-item ${active ? 'active' : ''}`}>
-      <Link to={`/book-club/${item.id}`}> 
+      <Link to={`/book-club/${item.id}`}> {/* should go to the book club page that matches id from BookClubsData */}
         <div className="carousel__slide-item-img-link">
           <img src={item.image} alt={item.name} />
         </div>
