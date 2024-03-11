@@ -1,13 +1,13 @@
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import App from './App';
 import Home from './pages/Home';
 import Auth from './pages/Auth';
 import Profile from './pages/Profile';
+import BookClub from './pages/BookClub'; // Import BookClub component
 import Header from './components/Header';
 import Footer from './components/Footer';
-// import Nav from './components/Nav';
 
 const router = createBrowserRouter([
   {
@@ -15,7 +15,6 @@ const router = createBrowserRouter([
     element: (
       <>
         <Header />
-        {/* <Nav /> */}
         <App />
         <Footer />
       </>
@@ -33,11 +32,15 @@ const router = createBrowserRouter([
       {
         path: '/profile',
         element: <Profile />
+      },
+      {
+        path: '/book-club/:bookClubId', 
+        element: <BookClub />
       }
     ]
   }
 ]);
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById('root')).render(
   <RouterProvider router={router} />
 );
