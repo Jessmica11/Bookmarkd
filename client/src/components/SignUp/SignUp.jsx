@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Alert } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom'; 
 import { useMutation } from '@apollo/client';
 import { ADD_USER } from '../../utils/mutations';
 import Auth from '../../utils/authUtils';
 
 const SignUp = () => {
-  const history = useHistory();
+  const navigate = useNavigate(); 
   const [userFormData, setUserFormData] = useState({ username: '', email: '', password: '', bio: '' });
   const [showAlert, setShowAlert] = useState(false);
   const [bioCharsLeft, setBioCharsLeft] = useState(280);
@@ -33,9 +33,8 @@ const SignUp = () => {
 
       Auth.login(data.addUser.token);
 
-      // this will resend the user to the auth page to login
-      // login page has Login tab open by default
-      history.push('/auth');
+      // Redirect the user to the auth page with the Login tab open by default
+      navigate('/auth', { state: { activeTab: 'login' } });
     } catch (err) {
       console.error(err);
       setShowAlert(true);
