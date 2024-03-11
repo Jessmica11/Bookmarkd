@@ -48,13 +48,15 @@ Bookworms 🐛  - Historical Fiction/Classic Literature
 
 ### Pages
 
-"/" - Homepage, which will show the 5 "books of the month"
+"/home" - Homepage, which will show the 5 "books of the month"
+![Gif of our homepage](./client/src/assets/images/homepage-screenshare.gif)
 
-"/login" - Where the user can login with their credentials
+"/auth" - Where the user can login with their credentials
+![Gif of our homepage](./client/src/assets/images/auth-page-screenshare.gif)
 
-"/profile" - Each user will have a profile page that displays their bio and shows their current book club(s)
+"/profile/[ username ]" - Each user will have a profile page that displays their bio and shows their current book club(s)
 
-"/bookclub" - Each book club will have a page where you can see a list of comments
+"/bookclub/[ bookclubId ]" - Each book club will have a page where you can see a list of comments
 
 ### Challenges
 
