@@ -3,7 +3,8 @@ import * as decode from "jwt-decode";
 class AuthService {
   // Get user profile information from the decoded token
   getProfile() {
-    return decode(this.getToken());
+    const token = this.getToken();
+    return token ? decode(token) : null;
   }
 
   // Check if the user is logged in
@@ -18,7 +19,8 @@ class AuthService {
       const decoded = decode(token);
       return decoded.exp < Date.now() / 1000;
     } catch (err) {
-      return false;
+      console.error("Error decoding token:", err.message);
+      return true; // Treat decoding errors as expired tokens
     }
   }
 
@@ -46,22 +48,23 @@ class AuthService {
       const data = await response.json();
       const { idToken, userId } = data;
 
-      // Store the token locally and redirect
-      this.login(idToken, userId);
+      // Store the token locally
+      this.login(idToken);
+      return userId;
     } catch (error) {
       console.error("Error logging in:", error.message);
-      // Handle the error (e.g., show a user-friendly error message)
+      throw error; // Rethrow the error for handling in the UI
     }
   }
 
-  // Log the user out and redirect to the authentication page (will show login form once state updates)
-  logout(redirectPath = "/authentication") {
+  // Log the user out and redirect to the authentication page (will show login form)
+  logout(redirectPath = "/home") {
     localStorage.removeItem("id_token");
     window.location.assign(redirectPath);
   }
 
   // Log the user in and store the token
-  login(idToken, userId) {
+  login(idToken) {
     localStorage.setItem("id_token", idToken);
   }
 }
