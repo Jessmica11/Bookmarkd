@@ -1,13 +1,20 @@
 import { Link } from 'react-router-dom';
 import React from 'react';
-
+import { useQuery } from '@apollo/client';
+import { QUERY_CURRENT_USER } from '../../utils/queries';
 import Auth from '../../utils/authUtils';
 
 const Header = () => {
+  // this should grab the user's username from the token that exists when they've logged in
+  const { loading, error, data } = useQuery(QUERY_CURRENT_USER);
+
   const logout = (event) => {
     event.preventDefault();
+    // this will remove the token from local storage and log the user out
     Auth.logout();
   };
+
+  // if the user is logged in, show their username and a logout button
   return (
     <header className="bg-primary text-light py-3 flex-row align-center">
       <div className="container flex-row justify-space-between-lg justify-center align-center">
@@ -18,17 +25,22 @@ const Header = () => {
           <p className="m-0" style={{fontSize: "1.5em"}}>Find Your Book Club 📚</p>
         </div>
         <div>
-          {Auth.loggedIn() ? (
+          {loading && <p>Loading...</p>}
+          {error && <p>Error fetching user data: {error.message}</p>}
+          {data && data.me && (
             <>
-              <Link className="btn btn-lg btn-info m-2" to="/me">
-                {/* Run the getProfile() method to get access to the unencrypted token value in order to retrieve the user's username  */}
-                {Auth.getProfile().authenticatedPerson.username}'s profile
+              <Link className="btn btn-lg btn-info m-2" to={`/profile/${data.me._id}`}>
+                {/* show the username in the text if logged in */}
+                {data.me.username}'s profile
               </Link>
+              {/* this is the logout button that will show if they are logged in */}
               <button className="btn btn-lg btn-light m-2" onClick={logout}>
                 Logout
               </button>
             </>
-          ) : (
+          )}
+          {/* if the user is not logged in, show the login button for the /auth page */}
+          {!Auth.loggedIn() && (
             <>
               <Link className="btn btn-lg btn-info m-2" to="/auth">
                 Login
