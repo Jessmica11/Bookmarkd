@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useQuery } from '@apollo/client';
-import { QUERY_CURRENT_USER } from '../utils/queries.js';
-import profileBlank from '../assets/images/profileblank.png';
+import React, { useState } from 'react';
+import kurstieprofilepic from '../assets/images/kurstieprofilepic.png';
 import awardicon from '../assets/images/awardicon6.png';
 import awardiconbw from '../assets/images/awardiconbw.png';
 import '../assets/css/style.css';
@@ -12,70 +10,73 @@ import { ProgressBar } from 'react-bootstrap';
 import bio from '../components/SignUp/SignUp.jsx';
 
 const Profile = () => {
-    const { loading, error, data } = useQuery(QUERY_CURRENT_USER, {
-        variables: { userId: localStorage.getItem('userId') },
-    });
-
-    useEffect(() => {
-        if (data) {
-            setCurrentUser(data.currentUser);
-        }
-    }, [data]);
-
-    // Function to handle profile photo upload
-    const handlePhotoUpload = (event) => {
-        const file = event.target.files[0]; // Get the first file selected by the user
-        const reader = new FileReader(); // Create a new FileReader object
-        reader.onloadend = () => {
-            // Set the profile photo to the uploaded file or default profile photo if no file is uploaded
-            setProfilePhoto(reader.result || profileBlank);
-        };
-        if (file) {
-            reader.readAsDataURL(file); // Convert the file to a data URL
-        }
+    // Define user information
+    const user = {
+        name: 'Kurstie DeHaven-Vargas',
+        quote: 'A book is a dream that you hold in your hand. - Neil Gaiman',
+        location: 'North Carolina, USA',
+        favoriteGenres: ['Psychological Thriller', 'Mystery', 'Smut'],
     };
 
+    // Define reading rewards data
     const readingRewards = {
         January: true,
         February: true,
-        March: false,
+        March: true,
         April: true,
         May: false,
-        June: true,
-        July: true,
-        August: false,
-        September: true,
-        October: true,
-        November: true,
+        June: false,
+        July: false,
+        August: true,
+        September: false,
+        October: false,
+        November: false,
         December: false,
     };
 
-    // Check loading state
-    if (loading) return <p>Loading...</p>;
+    const [favoriteAuthors, setFavoriteAuthors] = useState([]);
+    const [newAuthor, setNewAuthor] = useState('');
 
-    // Check error state
-    if (error) {
-        console.error('Error fetching user data:', error);
-        return <p>Error fetching user data!</p>;
-    }
+    const addFavoriteAuthor = () => {
+        if (newAuthor.trim() !== '') {
+            setFavoriteAuthors([...favoriteAuthors, newAuthor]);
+            setNewAuthor('');
+        }
+    };
+
+    const removeFavoriteAuthor = (index) => {
+        const updatedAuthors = [...favoriteAuthors];
+        updatedAuthors.splice(index, 1);
+        setFavoriteAuthors(updatedAuthors);
+    };
+
+    // Function to render ribbon for each month
+    const renderRibbon = (month, participated) => {
+        const ribbonImageUrl = participated ? awardicon : awardiconbw;
+        return <img src={ribbonImageUrl} alt={`${month} Ribbon`} style={{ width: '50px', height: '50px' }} />;
+    };
+
+    // Progress bar components
+    const ReadingGoalProgressBar = ({ variant, completed, height }) => {
+        return <ProgressBar now={completed} label={`${completed}%`} variant={variant} style={{ height: height }} />;
+    };
 
     return (
         <div className="profile-page" style={{ color: 'white' }}>
             <div className="left-column">
                 <div className="profile-info">
                     <div className="profile-photo">
-                        <img src={profilePhoto} style={{ width: '200px', height: '200px', borderRadius: '50%' }} alt="Profile" />
-                        <input type="file" onChange={handlePhotoUpload} accept="image/*" style={{ marginTop: '10px' }} />
+                        <img src={kurstieprofilepic} style={{ width: '200px', height: '200px', borderRadius: '50%' }} alt="Profile" />
                     </div>
                     <div className="profile-details">
-                        <h2>{currentUser ? currentUser.name : ''}</h2>
-                        <p>{currentUser ? currentUser.quote : ''}</p>
+                        <h2>{user.name}</h2>
+                        <p>{user.quote}</p>
                     </div>
                 </div>
                 <div className="quick-glance">
                     <div className="quick-info">
-                        <p>Location: {currentUser ? currentUser.location : ''}</p>
-                        <p>Favorite Genres: {currentUser ? currentUser.favoriteGenres.join(', ') : ''}</p>
+                        <p>Location: {user.location}</p>
+                        <p>Favorite Genres: {user.favoriteGenres.join(', ')}</p>
                     </div>
                 </div>
             </div>
@@ -96,11 +97,11 @@ const Profile = () => {
                     <h3>Reading Goals</h3>
                     <div className="progressBars">
                         <p>Number of Books Read to Goal</p>
-                        <ProgressBar now={60} label="60%" variant="success" style={{ height: '30px' }} />
+                        <ReadingGoalProgressBar variant="success" completed={60} height={30} />
                         <p>Different Genres Read to Goal</p>
-                        <ProgressBar now={30} label="30%" variant="info" style={{ height: '30px' }} />
+                        <ReadingGoalProgressBar variant="info" completed={30} height={30} />
                         <p>Number of Authors Read to Goal</p>
-                        <ProgressBar now={80} label="80%" variant="warning" style={{ height: '30px' }} />
+                        <ReadingGoalProgressBar variant="warning" completed={80} height={30} />
                     </div>
                 </div>
             </div>
@@ -110,11 +111,7 @@ const Profile = () => {
                     <div className="reward-grid">
                         {Object.entries(readingRewards).map(([month, participated]) => (
                             <div key={month} className="reward-item">
-                                {participated ? (
-                                    <img src={awardicon} alt="Award Icon" />
-                                    ) : (
-                                    <img src={awardiconbw} alt="Award Icon" />
-                                )}
+                                {renderRibbon(month, participated)}
                                 <p>{month}</p>
                             </div>
                         ))}
@@ -149,3 +146,4 @@ const Profile = () => {
 };
 
 export default Profile;
+
