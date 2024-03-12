@@ -1,5 +1,5 @@
 * {
-   font-family: Comfortaa;
+   font-family: 'Comfortaa';
 }
 
 
@@ -62,3 +62,155 @@ nav a:hover {
    text-decoration: none;
    color: #333;
 }
+
+.reward-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+}
+
+.reward-item {
+    text-align: center;
+}
+
+.container {
+    background-color: transparent;
+}
+
+.card {
+    background-color: transparent;
+    border-width: 3px;
+}
+
+.card.mb-4 {
+   border-width: 3px;
+}
+
+/* Profile Page Container */
+.profile-page {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px;
+    
+}
+
+.profile-page h3, li {
+   text-align: center;
+}
+
+/* Left Column */
+.left-column {
+    width: 40%;
+    margin-right: 50px;
+}
+
+/* Profile Info */
+.profile-info {
+    margin-bottom: 20px;
+}
+
+.profile-details {
+    text-align: center;
+}
+
+/* Quick Glance Section */
+.quick-glance {
+    background-color: #70926f; /* Light gray */
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.quick-info p {
+    margin: 5px 0;
+}
+
+/* Middle Column */
+.middle-column {
+    width: 50%;
+}
+
+/* Right Column */
+.right-column {
+    width: 30%;
+}
+
+/* Bio Section */
+.bio-section textarea {
+    width: 100%;
+    height: 100px;
+}
+.reward-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Adjusted to render three columns */
+    gap: 10px;
+}
+
+
+/* Book Lists */
+.book-recommendations,
+.books-to-read,
+.reading-rewards,
+.favorite-authors,
+.reading-goals {
+    margin-bottom: 50px;
+}
+
+/* Book Lists - Placeholder Styling */
+.book-recommendations ul,
+.books-to-read ul,
+.reading-rewards ul,
+.favorite-authors ul,
+.reading-goals ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.book-recommendations ul li,
+.books-to-read ul li,
+.reading-rewards ul li,
+.favorite-authors ul li,
+.reading-goals ul li {
+    margin-bottom: 5px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+}
+
+.book-recommendations ul li:last-child,
+.books-to-read ul li:last-child,
+.reading-rewards ul li:last-child,
+.favorite-authors ul li:last-child,
+.reading-goals ul li:last-child {
+    border-bottom: none;
+}
+
+/* Profile Photo */
+.profile-photo {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    margin-bottom: 20px;
+}
+
+.book-recommendations {
+    text-align: center; /* Center the content horizontally */
+}
+
+.book-recommendations img {
+    display: inline-block; /* Ensure the images are displayed as inline-block elements */
+    margin: 0 auto; /* Center the images horizontally */
+}
+
+/* Responsive Styling */
+@media (max-width: 768px) {
+    .profile-page {
+        flex-direction: column;
+    }
+    .left-column,
+    .middle-column,
+    .right-column {
+        width: 100%;
+    }
+}
+
+
