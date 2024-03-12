@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 export const QUERY_BOOK_CLUBS = gql`
   query GetBookClubs {
@@ -152,7 +152,6 @@ export const QUERY_USER_NOTIFICATIONS = gql`
       _id
       message
       createdAt
-      // Additional notification-related fields
     }
   }
 `;

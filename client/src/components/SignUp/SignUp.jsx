@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { Form, Button, Alert } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom'; 
+import { Form, Button } from 'react-bootstrap';
+// import { useNavigate } from 'react-router-dom'; 
 import { useMutation } from '@apollo/client';
 import { ADD_USER } from '../../utils/mutations';
 import Auth from '../../utils/authUtils';
 
 const SignUp = () => {
-  const navigate = useNavigate(); 
+  // const navigate = useNavigate(); 
   const [userFormData, setUserFormData] = useState({ username: '', email: '', password: '', bio: '' });
   const [showAlert, setShowAlert] = useState(false);
-  const [bioCharsLeft, setBioCharsLeft] = useState(280);
+  // const [bioCharsLeft, setBioCharsLeft] = useState(280);
   const [addUser, { error }] = useMutation(ADD_USER);
 
   const handleInputChange = (event) => {
@@ -17,10 +17,11 @@ const SignUp = () => {
     setUserFormData({ ...userFormData, [name]: value });
 
     // show the character count for the bio as the user types
-    if (name === 'bio') {
-      const charsLeft = 280 - value.length;
-      setBioCharsLeft(charsLeft);
-    }
+    // if (name === 'bio') {
+    //   const charsLeft = 280 - value.length;
+    //   setBioCharsLeft(charsLeft);
+    //     console.log('Bio character count:', charsLeft); // Added console log
+    // }
   };
 
   const handleFormSubmit = async (event) => {
@@ -30,11 +31,12 @@ const SignUp = () => {
       const { data } = await addUser({
         variables: { ...userFormData }
       });
+       console.log('Form submitted successfully! Response:', data);
 
       Auth.login(data.addUser.token);
 
       // Redirect the user to the auth page with the Login tab open by default
-      navigate('/auth', { state: { activeTab: 'login' } });
+      // navigate('/auth', { state: { activeTab: 'login' } });
     } catch (err) {
       console.error(err);
       setShowAlert(true);
@@ -63,14 +65,14 @@ const SignUp = () => {
         <Form.Group controlId="formBasicBio">
           <Form.Label>Tell us about yourself!</Form.Label>
           <Form.Control as="textarea" rows={3} placeholder="Your bio" name="bio" value={userFormData.bio} onChange={handleInputChange} maxLength={280} />
-          <Form.Text className="text-muted">{bioCharsLeft} characters left</Form.Text>
+          {/* <Form.Text className="text-muted">{bioCharsLeft} characters left</Form.Text> */}
         </Form.Group>
 
         <Button variant="primary" type="submit">
           Submit
         </Button>
       </Form>
-      {error && <p>Error signing up: {error.message}</p>}
+      {/* {error && <p>Error signing up: {error.message}</p>} */}
       {showAlert && <p>Something went wrong with your sign up! Please try again.</p>}
     </div>
   );

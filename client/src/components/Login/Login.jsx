@@ -3,13 +3,13 @@ import { Form, Button, Alert } from 'react-bootstrap';
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER } from '../../utils/mutations';
 import Auth from '../../utils/authUtils';
-import { useNavigate } from 'react-router-dom'; 
+// import { useNavigate } from 'react-router-dom'; 
 
 const Login = () => {
   const [userFormData, setUserFormData] = useState({ email: '', password: '' });
   const [showAlert, setShowAlert] = useState(false);
   const [loginUser, { error }] = useMutation(LOGIN_USER);
-  const navigate = useNavigate(); 
+  // const navigate = useNavigate(); 
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -25,7 +25,7 @@ const Login = () => {
       });
 
       Auth.login(data.login.token);
-      navigate('/profile'); // Redirect to profile page after successful login
+      // navigate('/profile'); // Redirect to profile page after successful login
     } catch (err) {
       console.error(err);
       setShowAlert(true);

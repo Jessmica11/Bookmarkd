@@ -67,6 +67,33 @@ class AuthService {
   login(idToken) {
     localStorage.setItem("id_token", idToken);
   }
+
+  // Implement user authentication logic here
+  async authenticateUser(email, password) {
+    try {
+      const response = await fetch("/api/authenticate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Authentication failed");
+      }
+
+      const { token } = await response.json();
+
+      this.login(token);
+
+      return { userId: decoded.userId }; // Adjust this according to your server response
+    } catch (error) {
+      console.error("Error during authentication:", error.message);
+      throw error; // Rethrow the error for handling in the UI
+    }
+  }
 }
 
 export default new AuthService();

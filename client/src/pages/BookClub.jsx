@@ -59,7 +59,7 @@ const BookClub = () => {
                 {joined && <p>Successfully joined the book club!</p>}
                 <h2>Join the Discussion</h2>
                 <CommentForm onSubmit={handleSubmitComment} />
-                <CommentList comments={commentsData.bookClubComments} />
+                {/* <CommentList comments={commentsData.bookClubComments} /> */}
             </div>
         </div>
     );
