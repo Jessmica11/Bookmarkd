@@ -58,7 +58,7 @@ const BookClub = () => {
                         </div>
                     </div>
                     <div className="mt-4">
-                        <h3>What Readers are Saying: </h3>
+                        <h3>What Readers Are Saying: </h3>
                         <ul className="list-group">
                             {comments.map(comment => (
                                 <li key={comment.id} className="list-group-item d-flex justify-content-between align-items-center">

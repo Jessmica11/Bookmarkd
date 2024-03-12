@@ -25,7 +25,7 @@ const Login = () => {
       });
 
       Auth.login(data.login.token);
-      navigate('/profile'); // Redirect to profile page after successful login
+      navigate('/profile'); // redirect to the user's profile page after login
     } catch (err) {
       console.error(err);
       setShowAlert(true);
@@ -33,23 +33,29 @@ const Login = () => {
   };
 
   return (
-    <Form onSubmit={handleFormSubmit}>
-      <Form.Group controlId="formBasicEmail">
-        <Form.Label>Email address</Form.Label>
-        <Form.Control type="email" placeholder="Enter email" name="email" value={userFormData.email} onChange={handleInputChange} />
-      </Form.Group>
+    <div className="container mt-5">
+      <div className="row justify-content-center">
+        <div className="col-lg-6">
+          <Form onSubmit={handleFormSubmit}>
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>Email address</Form.Label>
+              <Form.Control type="email" placeholder="Enter email" name="email" value={userFormData.email} onChange={handleInputChange} />
+            </Form.Group>
 
-      <Form.Group controlId="formBasicPassword">
-        <Form.Label>Password</Form.Label>
-        <Form.Control type="password" placeholder="Password" name="password" value={userFormData.password} onChange={handleInputChange} />
-      </Form.Group>
+            <Form.Group controlId="formBasicPassword">
+              <Form.Label>Password</Form.Label>
+              <Form.Control type="password" placeholder="Password" name="password" value={userFormData.password} onChange={handleInputChange} />
+            </Form.Group>
 
-      <Button variant="primary" type="submit">
-        Submit
-      </Button>
+            <Button variant="primary" type="submit" className="mt-3">
+              Submit
+            </Button>
 
-      {showAlert && <Alert variant="danger">Invalid credentials. Please try again.</Alert>}
-    </Form>
+            {showAlert && <Alert variant="danger" className="mt-3">Invalid credentials. Please try again.</Alert>}
+          </Form>
+        </div>
+      </div>
+    </div>
   );
 };
 
