@@ -1,65 +1,77 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useMutation, useQuery } from '@apollo/client';
-import { QUERY_CURRENT_USER, QUERY_BOOK_CLUB_COMMENTS } from '../utils/queries';
-import { JOIN_BOOK_CLUB } from '../utils/mutations';
-import BookClubDetails from '../components/BookClubs/BookClubDetails.jsx';
-import CommentForm from '../components/CommentForm/CommentForm.jsx';
-import CommentList from '../components/CommentList/CommentList.jsx';
+import BookClubDetails from '../components/BookClubs/BookClubDetails';
 
 const BookClub = () => {
     const { bookClubId } = useParams();
-    const [joined, setJoined] = useState(false); 
+    const [comments, setComments] = useState([]);
+    const [newComment, setNewComment] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
-    // useMutation hook for JOIN_BOOK_CLUB mutation
-    const [joinBookClub] = useMutation(JOIN_BOOK_CLUB);
+    useEffect(() => {
+    }, [bookClubId]);
 
-    // get the current user's data
-    const { loading: userLoading, data: userData } = useQuery(QUERY_CURRENT_USER);
-
-    // Fetch comments for the book club
-    const { loading: commentsLoading, data: commentsData } = useQuery(QUERY_BOOK_CLUB_COMMENTS, {
-        variables: { bookClubId },
-    });
-
-    const handleSubmitComment = (newComment) => {
-        // Here you can implement the logic to submit the comment to the backend
-    };
-
-    const handleJoinClub = async () => {
+    const handleSubmitComment = async (event) => {
+        event.preventDefault();
         try {
-            // get the user ID from the userData object
-            const userId = userData?.me?._id;
-            if (!userId) {
-                console.error('User ID not found.');
-                return;
-            }
-            
-            // call the JOIN_BOOK_CLUB mutation so the user can join the book club
-            await joinBookClub({ variables: { userId, bookClubId } });
-            // if mutation works, update the joined state
-            setJoined(true);
+            // to show what adding comments could look like 
+            const timestamp = new Date().toLocaleString();
+            const updatedComments = [...comments, { id: comments.length + 1, text: newComment, user: { name: 'User' }, timestamp }];
+            setComments(updatedComments);
+            setNewComment('');
         } catch (error) {
-            console.error('Error joining book club:', error);
-            // error handling
+            setError('Error adding comment');
         }
     };
 
-    if (userLoading || commentsLoading) return <p>Loading...</p>;
+    const handleDeleteComment = (commentId) => {
+        const filteredComments = comments.filter(comment => comment.id !== commentId);
+        setComments(filteredComments);
+    };
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error}</div>;
 
     return (
-        <div>
-            <BookClubDetails bookClubId={bookClubId} />
-            <div>
-                {/* show the join button if not logged in */}
-                {!joined && (
-                    <button onClick={handleJoinClub}>Join Club</button>
-                )}
-                {/* tell the user it worked */}
-                {joined && <p>Successfully joined the book club!</p>}
-                <h2>Join the Discussion</h2>
-                <CommentForm onSubmit={handleSubmitComment} />
-                <CommentList comments={commentsData.bookClubComments} />
+        <div className="container">
+            <div className="row">
+                <div className="col-lg-6">
+                    <BookClubDetails bookClubId={bookClubId} />
+                </div>
+                <div className="col-lg-6">
+                    <div className="card">
+                        <div className="card-body">
+                            <h2 className="card-title">Join the Discussion</h2>
+                            <form onSubmit={handleSubmitComment}>
+                                <div className="mb-3">
+                                    <textarea
+                                        className="form-control"
+                                        value={newComment}
+                                        onChange={(e) => setNewComment(e.target.value)}
+                                        placeholder="Add your comment"
+                                        required
+                                    ></textarea>
+                                </div>
+                                <button type="submit" className="btn btn-primary">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div className="mt-4">
+                        <h3>What Readers are Saying: </h3>
+                        <ul className="list-group">
+                            {comments.map(comment => (
+                                <li key={comment.id} className="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>{comment.user.name}</strong>: {comment.text}
+                                        <small className="text-muted"> - {comment.timestamp}</small>
+                                    </div>
+                                    <button className="btn btn-danger btn-sm" onClick={() => handleDeleteComment(comment.id)}>Delete</button>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     );

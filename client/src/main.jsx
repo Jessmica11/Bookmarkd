@@ -1,11 +1,11 @@
 import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-
 import App from './App';
+
 import Home from './pages/Home';
 import Auth from './pages/Auth';
 import Profile from './pages/Profile';
-import BookClub from './pages/BookClub'; // Import BookClub component
+import BookClub from './pages/BookClub';
 import Header from './components/Header';
 import Footer from './components/Footer';
 

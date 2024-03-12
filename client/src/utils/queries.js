@@ -152,7 +152,6 @@ export const QUERY_USER_NOTIFICATIONS = gql`
       _id
       message
       createdAt
-      // Additional notification-related fields
     }
   }
 `;

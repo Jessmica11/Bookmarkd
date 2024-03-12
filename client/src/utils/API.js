@@ -45,18 +45,18 @@ export const getUserComments = (token) => {
 
 // create a new user's account
 export const createUser = (userData) => {
-  return fetch('/api/createUsersFromJson', {
+  return fetch('/api/users/register', { 
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(userData),
   })
-    .then(response => response.json())
-    .catch(error => {
-      console.error('Error creating user:', error.message);
-      throw new Error('Failed to create user');
-    });
+  .then(response => response.json())
+  .catch(error => {
+    console.error('Error creating user:', error.message);
+    throw new Error('Failed to create user');
+  });
 };
 
 // log the user in

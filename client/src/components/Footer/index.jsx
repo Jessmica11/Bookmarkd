@@ -7,7 +7,7 @@ const Footer = () => {
   return (
     <footer className="bg-secondary p-3" style={{ position: 'fixed', bottom: 0, left: 0, width: '100%' }}>
       <div className="container text-center">
-        {location.pathname !== '/' && (
+        {location.pathname !== '/home' && (
           <button className="btn btn-dark mb-3" onClick={() => navigate(-1)}>
             &larr; Go Back
           </button>

@@ -37,9 +37,9 @@ const startApolloServer = async () => {
   // app.use("/graphql", server.getMiddleware());
     app.use("/graphql", expressMiddleware(server));
 
-  // Add the following lines
-  app.use(express.urlencoded({ extended: true }));
-  app.use(express.json());
+  // // Add the following lines
+  // app.use(express.urlencoded({ extended: true }));
+  // app.use(express.json());
 
   // create users from userData.json
   app.post("/api/createUsersFromJson", async (req, res) => {
